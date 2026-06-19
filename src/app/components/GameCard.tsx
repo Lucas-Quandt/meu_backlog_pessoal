@@ -1,18 +1,16 @@
 import { Calendar, Clock, Trophy, Star, Trash2, Edit } from 'lucide-react';
 import { Game } from '../types';
-
 interface GameCardProps {
   game: Game;
   onEdit: (game: Game) => void;
   onDelete: (id: string) => void;
 }
-
 export function GameCard({ game, onEdit, onDelete }: GameCardProps) {
   return (
     <div className="bg-black/40 backdrop-blur-md rounded-[28px] overflow-hidden border hover:border-green-400/60 transition-all duration-300 hover:scale-105 shadow-2xl">
-      <div className="relative aspect-[3/4] bg-gradient-to-br from-purple-500 to-blue-500">
+      <div className="relative aspect-[3/4] bg-zinc-900">
         {game.coverUrl ? (
-          <img src={game.coverUrl} alt={game.title} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+          <img src={game.coverUrl} alt={game.title} className="w-full h-full object-contain hover:scale-105 transition-transform duration-500" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-white text-2xl font-bold">
             {game.title.charAt(0)}
@@ -25,7 +23,6 @@ export function GameCard({ game, onEdit, onDelete }: GameCardProps) {
           </div>
         )}
       </div>
-
       <div className="p-4">
         <div className="flex items-center justify-between gap-2 mb-2">
           <h3 className="font-bold text-lg truncate text-white">{game.title}</h3>
@@ -35,7 +32,6 @@ export function GameCard({ game, onEdit, onDelete }: GameCardProps) {
             </span>
           )}
         </div>
-
         <div className="flex items-center gap-2 mb-2">
           <div className="flex items-center gap-1 text-yellow-400">
             {[...Array(5)].map((_, i) => (
@@ -44,7 +40,6 @@ export function GameCard({ game, onEdit, onDelete }: GameCardProps) {
           </div>
           <span className="text-sm text-white/60">{game.rating}/5</span>
         </div>
-
         <div className="space-y-1 text-sm text-white/70 mb-3">
           <div className="flex items-center gap-2">
             <Calendar size={14} />
@@ -57,7 +52,6 @@ export function GameCard({ game, onEdit, onDelete }: GameCardProps) {
           <div><span className="text-white/90 font-semibold">Plataforma:</span> {game.platform}</div>
           <div><span className="text-white/90 font-semibold">Lançamento:</span> {game.releaseYear}</div>
         </div>
-
         <div className="flex gap-2">
           <button
             onClick={() => onEdit(game)}
