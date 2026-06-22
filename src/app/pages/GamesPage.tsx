@@ -57,17 +57,28 @@ export function GamesPage() {
       switch (sortBy) {
         case 'recent': return new Date(b.completedDate).getTime() - new Date(a.completedDate).getTime();
         case 'oldest': return new Date(a.completedDate).getTime() - new Date(b.completedDate).getTime();
-        case 'mostHours': return b.hoursToComplete - a.hoursToComplete;
-        case 'leastHours': return a.hoursToComplete - b.hoursToComplete;
+        case 'mostHours': return timeToSeconds(b.hoursToComplete) - timeToSeconds(a.hoursToComplete);
+        case 'leastHours': return timeToSeconds(a.hoursToComplete) - timeToSeconds(b.hoursToComplete);
         case 'rating': return b.rating - a.rating;
         default: return 0;
       }
     });
 
+  const timeToSeconds = (time: string): number => {
+    if (!time) return 0;
+    const parts = time.split(':').map(Number);
+    if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    if (parts.length === 2) return parts[0] * 3600 + parts[1] * 60;
+    return Number(parts[0]) * 3600;
+  };
+
+  const totalSeconds = games.reduce((sum, g) => sum + timeToSeconds(g.hoursToComplete), 0);
+  const totalHoursDisplay = `${Math.floor(totalSeconds / 3600)}h ${Math.floor((totalSeconds % 3600) / 60)}m`;
+
   const stats = {
     total: games.length,
     platinum: games.filter(g => g.isPlatinum).length,
-    totalHours: games.reduce((sum, g) => sum + g.hoursToComplete, 0),
+    totalHours: totalHoursDisplay,
     avgRating: games.length > 0 ? (games.reduce((sum, g) => sum + g.rating, 0) / games.length).toFixed(1) : '0',
   };
 
@@ -122,7 +133,7 @@ export function GamesPage() {
           {[
             { label: 'Jogos Zerados', val: stats.total, icon: Trophy },
             { label: 'Platinados', val: stats.platinum, icon: Trophy },
-            { label: 'Horas Jogadas', val: `${stats.totalHours}h`, icon: Clock },
+            { label: 'Horas Jogadas', val: stats.totalHours, icon: Clock },
             { label: 'Nota Média', val: stats.avgRating, icon: Star }
           ].map((stat, i) => (
             <div key={i} className="bg-zinc-900/40 backdrop-blur-md rounded-none p-6 border border-zinc-800">
@@ -144,7 +155,7 @@ export function GamesPage() {
             </div>
             <div className="text-2xl font-bold text-white">{lastCompleted.title}</div>
             <div className="text-white/40 text-xs mt-1">
-              {new Date(lastCompleted.completedDate).toLocaleDateString('pt-BR')} · {lastCompleted.hoursToComplete}h
+              {new Date(lastCompleted.completedDate).toLocaleDateString('pt-BR')} · {lastCompleted.hoursToComplete}
             </div>
           </div>
         )}
