@@ -5,7 +5,7 @@ export interface Game {
   platform: string;
   releaseYear: number;
   completedDate: string;
-  hoursToComplete: number;
+  hoursToComplete: string;
   rating: number;
   isPlatinum: boolean;
   completionCount?: number;
