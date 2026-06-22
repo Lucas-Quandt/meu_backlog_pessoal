@@ -47,6 +47,14 @@ export function GamesPage() {
 
   const platforms = Array.from(new Set(games.map(g => g.platform))).sort();
 
+  const timeToSeconds = (time: string): number => {
+    if (!time) return 0;
+    const parts = time.split(':').map(Number);
+    if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    if (parts.length === 2) return parts[0] * 3600 + parts[1] * 60;
+    return Number(parts[0]) * 3600;
+  };
+
   const filteredAndSortedGames = games
     .filter(game => {
       if (selectedPlatform !== 'all' && game.platform !== selectedPlatform) return false;
@@ -64,14 +72,6 @@ export function GamesPage() {
       }
     });
 
-  const timeToSeconds = (time: string): number => {
-    if (!time) return 0;
-    const parts = time.split(':').map(Number);
-    if (parts.length === 3) return parts[0] * 3600 + parts[1] * 60 + parts[2];
-    if (parts.length === 2) return parts[0] * 3600 + parts[1] * 60;
-    return Number(parts[0]) * 3600;
-  };
-
   const totalSeconds = games.reduce((sum, g) => sum + timeToSeconds(g.hoursToComplete), 0);
   const totalHoursDisplay = `${Math.floor(totalSeconds / 3600)}h ${Math.floor((totalSeconds % 3600) / 60)}m`;
 
@@ -83,7 +83,7 @@ export function GamesPage() {
   };
 
   const mostCompletedGames = [...games].sort((a, b) => (b.completionCount || 1) - (a.completionCount || 1)).slice(0, 5);
-  const longestSingleRunGames = [...games].filter(g => (g.completionCount || 1) === 1).sort((a, b) => b.hoursToComplete - a.hoursToComplete).slice(0, 5);
+  const longestSingleRunGames = [...games].filter(g => (g.completionCount || 1) === 1).sort((a, b) => timeToSeconds(b.hoursToComplete) - timeToSeconds(a.hoursToComplete)).slice(0, 5);
   const lastCompleted = games.length > 0
     ? [...games].sort((a, b) => new Date(b.completedDate).getTime() - new Date(a.completedDate).getTime())[0]
     : null;
