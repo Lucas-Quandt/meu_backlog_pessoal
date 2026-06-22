@@ -47,7 +47,7 @@ export function GameCard({ game, onEdit, onDelete }: GameCardProps) {
           </div>
           <div className="flex items-center gap-2">
             <Clock size={14} />
-            <span>{game.hoursToComplete}h para zerar</span>
+            <span>{game.hoursToComplete} para zerar</span>
           </div>
           <div><span className="text-white/90 font-semibold">Plataforma:</span> {game.platform}</div>
           <div><span className="text-white/90 font-semibold">Lançamento:</span> {game.releaseYear}</div>
